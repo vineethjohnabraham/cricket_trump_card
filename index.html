@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket Trumps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <span class="beam left"></span><span class="beam right"></span>
+  </div>
+
+  <header>
+    <div class="brand">
+      <span class="eyebrow">WORLD STARS EDITION</span>
+      <h1 class="logo">CRICKET <span>TRUMPS</span></h1>
+    </div>
+    <button id="soundBtn" class="icon-btn" title="Sound on/off">🔊</button>
+  </header>
+
+  <main>
+    <!-- SETUP -->
+    <section id="setup" class="screen active">
+      <p class="hero-sub">Collect the greatest cricketers on the planet. Pick your best stat. Take every card.</p>
+
+      <div class="mode-row">
+        <button class="mode-btn" data-mode="cpu">
+          <span class="mode-icon">🤖</span>
+          <span class="mode-title">VS COMPUTER</span>
+          <span class="mode-desc">Take on the robot</span>
+        </button>
+        <button class="mode-btn alt" data-mode="friends">
+          <span class="mode-icon">👫</span>
+          <span class="mode-title">WITH FRIENDS</span>
+          <span class="mode-desc">2–4 players, one device</span>
+        </button>
+      </div>
+
+      <div class="glass" id="playerPanel">
+        <h2>Players</h2>
+        <div id="playerList"></div>
+        <div class="row">
+          <button class="ghost-btn" id="addPlayer">+ Add player</button>
+        </div>
+
+        <h2>Computer skill</h2>
+        <div class="toggle" id="levelToggle">
+          <button data-val="easy" class="on">🐣 Easy</button>
+          <button data-val="hard">🧠 Hard</button>
+        </div>
+
+        <div class="rule-strip">🃏 Everyone gets <b>25 cards</b> &nbsp;•&nbsp; Collect <b>ALL</b> the cards to be champion</div>
+
+        <button class="cta" id="startBtn">Deal the cards</button>
+      </div>
+
+      <div class="glass how">
+        <h2>How to play</h2>
+        <div class="steps">
+          <div class="step"><b>1</b><p>Everyone gets <strong>25</strong> cricket star cards.</p></div>
+          <div class="step"><b>2</b><p>On your turn, tap the stat on your top card you think is the <strong>biggest</strong>.</p></div>
+          <div class="step"><b>3</b><p>Everyone flips. The <strong>highest number</strong> takes all the cards.</p></div>
+          <div class="step"><b>4</b><p>A tie? The cards go into the <strong>pot</strong> for the next round.</p></div>
+          <div class="step"><b>5</b><p>No cards left? You're out. Collect <strong>every card</strong> to be champion! 🏆</p></div>
+        </div>
+        <p class="note">💡 Tip: Bowlers have lots of WICKETS. Batters have lots of RUNS.</p>
+      </div>
+    </section>
+
+    <!-- PASS DEVICE -->
+    <section id="pass" class="screen">
+      <div class="glass center">
+        <p class="big-emoji">📱</p>
+        <h2>Pass the device to</h2>
+        <p id="passName" class="pass-name">PLAYER</p>
+        <p class="note">No peeking, everyone else! 🙈</p>
+        <button class="cta" id="readyBtn">I'm ready</button>
+      </div>
+    </section>
+
+    <!-- GAME -->
+    <section id="game" class="screen">
+      <div class="hud">
+        <div class="hud-cell"><small>Round</small><span id="roundInfo">1</span></div>
+        <div class="hud-cell"><small>Pot</small><span id="potInfo">0</span></div>
+        <div class="hud-cell"><small>Cards in play</small><span id="goalInfo">50</span></div>
+        <button class="ghost-btn" id="quitBtn">✕ Quit</button>
+      </div>
+      <div id="message" class="message">...</div>
+      <div id="table" class="table"></div>
+      <div class="actions">
+        <button class="cta hidden" id="nextBtn">Next round ▶</button>
+      </div>
+    </section>
+
+    <!-- GAME OVER -->
+    <section id="over" class="screen">
+      <div class="glass center">
+        <p class="big-emoji trophy">🏆</p>
+        <p class="eyebrow">CHAMPION</p>
+        <p id="winnerText" class="pass-name">WINNER</p>
+        <ol id="scoreList" class="scores"></ol>
+        <div class="row">
+          <button class="cta" id="againBtn">Play again</button>
+          <button class="ghost-btn" id="menuBtn">Menu</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Stats are approximate ODI career numbers • Made for fun 🏏</footer>
+
+  <script src="cards.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
