@@ -316,6 +316,57 @@ const FIGURES = {
        ${L(48,42,34,30,7)}${L(34,30,28,14,7)}`,
 };
 
+const playerPhotoRequests = new Map();
+
+function getPlayerPhoto(name) {
+  if (playerPhotoRequests.has(name)) return playerPhotoRequests.get(name);
+
+  const params = new URLSearchParams({
+    action: "query",
+    format: "json",
+    formatversion: "2",
+    origin: "*",
+    titles: `${name}|${name} (cricketer)`,
+    redirects: "1",
+    prop: "pageimages",
+    piprop: "thumbnail",
+    pithumbsize: "600",
+  });
+  const request = fetch(`https://en.wikipedia.org/w/api.php?${params}`)
+    .then((response) => {
+      if (!response.ok) throw new Error(`Wikipedia returned ${response.status}`);
+      return response.json();
+    })
+    .then((data) => {
+      const source = data.query?.pages?.find((page) => page.thumbnail?.source)?.thumbnail?.source;
+      if (!source) throw new Error(`No portrait found for ${name}`);
+      const url = new URL(source);
+      const trustedHosts = new Set(["upload.wikimedia.org", "thumb.wikimedia.org"]);
+      if (url.protocol !== "https:" || !trustedHosts.has(url.hostname)) {
+        throw new Error(`Unexpected portrait source for ${name}`);
+      }
+      return url.href;
+    });
+
+  playerPhotoRequests.set(name, request);
+  return request;
+}
+
+function loadPlayerPhotos(root) {
+  root.querySelectorAll(".player-photo[data-player]").forEach((image) => {
+    getPlayerPhoto(image.dataset.player)
+      .then((source) => {
+        if (!image.isConnected) return;
+        image.addEventListener("load", () => image.classList.add("loaded"), { once: true });
+        image.src = source;
+      })
+      .catch((error) => {
+        console.warn(error.message);
+        image.remove();
+      });
+  });
+}
+
 function cardBackHTML() {
   return `<div class="face back">
       <div class="emblem"><div><div class="ball">🏏</div><div class="word">CRICKET<br>TRUMPS</div></div></div>
@@ -343,6 +394,7 @@ function cardHTML(card, o = {}) {
             <div class="art">
               <div class="watermark">${initials(card.name)}</div>
               <svg class="figure" viewBox="0 -20 100 140">${FIGURES[card.role]}</svg>
+              <img class="player-photo" data-player="${escapeHTML(card.name)}" alt="${escapeHTML(card.name)}" loading="eager">
               <div class="team-chip"><span class="code">${card.team}</span><span class="stripe"></span><span class="role-ic">${ROLES[card.role].split(" ")[0]}</span></div>
               ${card.legend ? `<div class="legend-seal">★ LEGEND</div>` : ""}
             </div>
@@ -407,6 +459,7 @@ function renderTable({ shown = null, hl = null, result = {}, sticker = {}, selec
     }
     return `<div class="slot ${i === S.chooser && !shown ? "chooser" : ""}">${head}${body}</div>`;
   }).join("");
+  loadPlayerPhotos($("#table"));
 }
 
 $("#table").addEventListener("click", (e) => {
